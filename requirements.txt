@@ -1,4 +1,4 @@
-opencv-python-headless
 pytubefix
 ultralytics
 ultralytics-thop
+opencv-python-headless
