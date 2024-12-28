@@ -1,3 +1,5 @@
+# Import libraries
+
 import streamlit as st
 from ultralytics import YOLO
 import numpy as np
@@ -52,7 +54,8 @@ youtube_link = st.sidebar.text_input("Or Enter YouTube Video Link")
 
 # --- Object Detection & Display Section ---
 if uploaded_image:
-    # Process Image
+    # Process Image from Uploaded File
+
     st.markdown("### Detection from Image")
     image = Image.open(uploaded_image)
     st.image(image, caption="Original Image", use_column_width=True)
@@ -64,7 +67,7 @@ if uploaded_image:
         st.image(detected_image, caption="Processed Image with Bounding Boxes", use_column_width=True)
 
 elif uploaded_video:
-    # Process Video from YouTube Link
+    # Process Video from Uploaded File
 
     with open(f"./intermediate_video.mp4", "wb") as f:
         f.write(uploaded_video.getbuffer())
@@ -93,11 +96,10 @@ elif youtube_link:
         
         # Convert frames to video
         with tempfile.NamedTemporaryFile(delete=False, suffix='.mp4') as temp_video_file:
-            # video_path = temp_video_file.name
+
             video_path = 'output_video.mp4'
             frames_to_video(annotated_frames, output_path=video_path)
 
-            # time.sleep(2)
             # Display the video
             video_file = open(video_path, 'rb')
             video_bytes = video_file.read()
@@ -105,8 +107,8 @@ elif youtube_link:
 
 # --- Footer ---
 
-# st.video('output_video.mp4')
 
+# Set markdown
 st.markdown("<hr>", unsafe_allow_html=True)
 st.markdown(
     "<p style='text-align: center;'>"
