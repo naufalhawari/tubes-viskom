@@ -27,7 +27,7 @@ def detect_image(image):
 
 # Function to perform object detection on video and return frames
 def detect_video(youtube_link):
-    results = model(youtube_link)  # Process video from YouTube link
+    results = model(youtube_link, stream=True)  # Process video from YouTube link
     frames = [frame.plot() for frame in results]  # Collect the list of frames (images)
     return frames
 
@@ -46,14 +46,15 @@ def frames_to_video(frames, output_path='output_video.mp4', fps=30):
 
 # --- File Upload Section ---
 st.sidebar.markdown("### Upload an Image or Provide YouTube Link")
-uploaded_file = st.sidebar.file_uploader("Upload an Image", type=["jpg", "jpeg", "png"])
+uploaded_image = st.sidebar.file_uploader("Upload an Image", type=["jpg", "jpeg", "png"])
+uploaded_video = st.sidebar.file_uploader("Upload a Video", type=["mp4", "mov", "avi"])
 youtube_link = st.sidebar.text_input("Or Enter YouTube Video Link")
 
 # --- Object Detection & Display Section ---
-if uploaded_file:
+if uploaded_image:
     # Process Image
-    st.markdown("### Uploaded Image")
-    image = Image.open(uploaded_file)
+    st.markdown("### Detection from Image")
+    image = Image.open(uploaded_image)
     st.image(image, caption="Original Image", use_column_width=True)
 
     # Object detection
@@ -62,9 +63,30 @@ if uploaded_file:
         detected_image = detect_image(np.array(image))
         st.image(detected_image, caption="Processed Image with Bounding Boxes", use_column_width=True)
 
+elif uploaded_video:
+    # Process Video from YouTube Link
+
+    with open(f"./intermediate_video.mp4", "wb") as f:
+        f.write(uploaded_video.getbuffer())
+
+    st.markdown("### Detection from Video")
+    with st.spinner("Processing video..."):
+        annotated_frames = detect_video('./intermediate_video.mp4')
+        
+        # Convert frames to video
+        with tempfile.NamedTemporaryFile(delete=False, suffix='.mp4') as temp_video_file:
+            # video_path = temp_video_file.name
+            video_path = 'output_video.mp4'
+            frames_to_video(annotated_frames, output_path=video_path)
+
+            # Display the video
+            video_file = open(video_path, 'rb')
+            video_bytes = video_file.read()
+            st.video(video_bytes)
+
 elif youtube_link:
     # Process Video from YouTube Link
-    st.markdown("### Video from YouTube Link")
+    st.markdown("### Detection from Youtube")
     st.text(f"Processing video from: {youtube_link}")
     with st.spinner("Processing video..."):
         annotated_frames = detect_video(youtube_link)
