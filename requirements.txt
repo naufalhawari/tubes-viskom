@@ -1,5 +1,5 @@
-opencv-python==4.6.0.66
-Pillow==9.1.1
-streamlit==1.31.1
-ultralytics==8.3.32
-ultralytics-thop==2.0.11
+opencv-python
+Pillow
+streamlit
+ultralytics
+ultralytics-thop
