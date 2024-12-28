@@ -3,3 +3,4 @@ Pillow
 streamlit
 ultralytics
 ultralytics-thop
+pytubefix
