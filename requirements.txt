@@ -1,3 +1,4 @@
+opencv-python-contrib
 opencv-python-headless
 pytubefix
 ultralytics
